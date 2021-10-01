@@ -1,0 +1,1 @@
+# """Does User.register fail to create a new user if any of the validations (e.g. uniqueness, non-nullable fields) fail?"""
