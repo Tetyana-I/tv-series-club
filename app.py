@@ -3,10 +3,12 @@ import os
 from flask import Flask, render_template, request, flash, redirect, session, g
 from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
-from flask_bcrypt import Bcrypt
+import requests
+
+# from flask_bcrypt import Bcrypt
 
 from forms import RegisterForm
-from models import db, connect_db, User
+from models import db, connect_db, User, Show
 
 CURR_USER_KEY = "curr_user"
 
@@ -111,5 +113,46 @@ def logout():
     
 
 @app.route('/user')
-def desktop():
-    return "I'm user desktop page"
+def user_desktop():
+    # 
+    return render_template('homepage.html')
+
+
+######################################################################
+# user's flow handling
+######################################################################
+
+@app.route('/search')
+def show_search_results():
+    """ returns a list of show-instances as a result of search query """
+    query = request.args["search-query"]
+    resp = requests.get("http://api.tvmaze.com/search/shows", params={'q': query})
+    shows_data=resp.json()
+    return render_template("search.html", shows=shows_data)
+
+
+@app.route('/shows/<int:show_id>')
+def show_details(show_id):
+    """ page with detail information about the show """
+    resp = requests.get(f"http://api.tvmaze.com/shows/{show_id}")
+    show_data=resp.json()
+    if show_data:
+        show = Show(
+            id = show_id,
+            title = show_data['name'],
+            language = show_data['language'],  
+            premiered = show_data['premiered'],
+            official_site = show_data['officialSite'],
+            average_rate = show_data['rating']['average'],
+            img_large_url = show_data['image']['original'],
+            img_small_url = show_data['image']['medium']
+        )
+    else:
+        flash("No information about this show", "danger")
+        return redirect('/user')
+  
+    return render_template("show.html", show=show)
+
+        # if not g.user:
+        # flash("Access unauthorized. Please, log in.", "danger")
+        # return redirect("/")

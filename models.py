@@ -2,6 +2,7 @@
 
 # from datetime import datetime
 
+from enum import unique
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 
@@ -56,3 +57,19 @@ class User(db.Model):
                 return user
 
         return False
+
+
+class Show(db.Model):
+    """User in the system."""
+
+    __tablename__ = 'shows'
+
+    id = db.Column(db.Text, primary_key=True)
+    title = db.Column(db.Text, nullable=False)
+    language = db.Column(db.Text, nullable=False, default="Unknown")
+    premiered = db.Column(db.Text, nullable=False, default="Unknown")
+    official_site = db.Column(db.Text, nullable=True, default="Unknown")
+    average_rate = db.Column(db.Text, nullable=True, default="Unknown")
+    img_large_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
+    img_small_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
+    

@@ -1,5 +1,27 @@
 
-.btn:hover {
-    cursor: pointer;
-  }
+body {
+    background-color: darkgrey;
+}
 
+.show-card {
+    width: 16rem;
+    border: solid 2px whitesmoke;
+}
+
+#login, #register, #invitation, #show {
+    background-color: whitesmoke;
+    border: solid 3px white;
+    border-radius: 5px;
+    padding: 2em;
+}
+
+.show-detail-img {
+    width: 20rem;
+}
+
+#rate {
+    border-radius: 15%;
+    background-color: rgb(236, 210, 92);
+    padding: 0.5em;
+    margin: 0.5em;
+}
