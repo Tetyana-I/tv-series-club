@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Show list {% endblock %}
+{% block content %}
+
+<div class="lists">
+    <h1>{{ collection.name }} </h1>
+    <p class="lead">{{ collection. description }} </p>
+    {% if not collection.shows %}
+        <p> No shows in this collection yet </p>
+    {% else %}
+    <div class="row">
+        {% for show in collection.shows %}
+        <div class="col">
+            <div class="card m-2 shows-list text-center">
+                <div>
+                    <p class="card-title">{{show.title}}</p>
+                </div>                
+                <a href="/shows/{{ show.id }}"><img class="min-img" src="{{ show.img_small_url }}"></a> 
+                {% if collection.user_id == g.user.id %}
+                <p>
+                    <form action="/collections/{{ collection.id }}/{{ show.id }}/delete" method="POST">
+                        <button type="submit" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </p>
+                {% endif %}
+            </div>                
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

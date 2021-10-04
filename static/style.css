@@ -8,12 +8,30 @@ body {
     border: solid 2px whitesmoke;
 }
 
-#login, #register, #invitation, #show {
+.shows-list {
+    width: 10rem;
+    border-radius: 3px;
+    border: solid, 2px, white;
+    background-color: darkgrey;
+    color: white;
+}
+
+.min-img {
+    width: 10rem;
+}
+
+#login, #register,
+#invitation, #show,
+.lists, .form-css {
     background-color: whitesmoke;
     border: solid 3px white;
     border-radius: 5px;
     padding: 2em;
 }
+
+.lists {
+    font-size: 1.2em;
+    }
 
 .show-detail-img {
     width: 20rem;

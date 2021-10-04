@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %} Collection list {% endblock %}
+{% block content %}
+
+<div class="lists">
+    <h1>Collections</h1>
+    <ul>
+    {% for collection in collections %}
+    <li>
+        <div class="row">
+            <div class="col col-md-4 col-sm-10 m-2">
+            <a href="/collections/{{ collection.id }}">{{ collection.name }}</a>
+            </div>
+            {% if collection.user_id == g.user.id %}
+            <div class="col  col-md-1 col-sm-2">
+                <form style="display:inline;" action="/user/collections/{{ collection.id }}/edit" method="POST">
+                    <button type="submit" class="btn btn-sm btn-secondary text-white"><i class="fas fa-edit"></i></button>
+                </form>
+                <form style="display:inline;" action="/user/collections/{{ collection.id }}/delete" method="POST">
+                    <button type="submit" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </li>
+    {% endfor %}
+    </ul>
+    <a class="btn btn-primary" href="/collections/add">Add a collection</a> 
+</div>
+
+{% endblock %}

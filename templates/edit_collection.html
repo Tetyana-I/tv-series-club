@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Edit collection{% endblock %}
+{% block content %}
+<div class="form-css">
+    <h1><b>Edit Collection</b></h1>
+    <p class="lead">You can make your changes to collection name and description below.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                {% for field in form
+                    if field.widget.input_type != 'hidden' %}
+                        <div class="form-group mb-3">
+                            {{ field(placeholder=field.label.text, class="form-control my-3") }}
+                            <!-- {% for error in field.errors %}
+                                <p class="form-text text-danger">{{ error }}</p>
+                            {% endfor %}  -->
+                        </div>
+                {% endfor %}
+                <button  type="submit" class="btn  btn-primary">Submit</button>
+                <a class="btn btn-secondary" href="/collections">Cancel</a>
+            </form>
+        </div>
+    </div>    
+</div>
+{% endblock %}

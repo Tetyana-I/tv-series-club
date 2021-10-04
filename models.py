@@ -19,9 +19,12 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Text, nullable=False, unique=True)
     password = db.Column(db.Text, nullable=False)
+    
+    user_collections = db.relationship('Collection', cascade="all, delete")
+
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}>"
@@ -64,12 +67,31 @@ class Show(db.Model):
 
     __tablename__ = 'shows'
 
-    id = db.Column(db.Text, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, unique=True)
     title = db.Column(db.Text, nullable=False)
-    language = db.Column(db.Text, nullable=False, default="Unknown")
-    premiered = db.Column(db.Text, nullable=False, default="Unknown")
-    official_site = db.Column(db.Text, nullable=True, default="Unknown")
-    average_rate = db.Column(db.Text, nullable=True, default="Unknown")
-    img_large_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
     img_small_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
+
+    collections = db.relationship('Collection', secondary='collections_shows', backref='shows')    
+
+
+class Collection(db.Model):
+    """Collection model."""
+
+    __tablename__ = 'collections'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.Text, nullable=False, unique=True)
+    description = db.Column(db.Text, nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
+
     
+
+class CollectionShow(db.Model):
+    """Mapping collections to shows."""
+
+    __tablename__ = 'collections_shows' 
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    collection_id = db.Column(db.Integer, db.ForeignKey('collections.id', ondelete='cascade'))
+    show_id = db.Column(db.Integer, db.ForeignKey('shows.id',  ondelete='cascade'))
+

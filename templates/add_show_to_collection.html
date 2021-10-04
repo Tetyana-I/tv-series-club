@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Show To Collection{% endblock %}
+{% block content %}
+<div class="form-css" >
+    <p class="lead"> Please choose a collection from the list </p>
+    <div class="row">
+        <div class="col-md-6">
+            <form method="POST">
+                {{ form.hidden_tag() }}
+                {% for field in form
+                    if field.widget.input_type != 'hidden' %}
+                        <div class="form-group mb-3">
+                            {{field(class_="form-control")}}  
+                            {% for error in field.errors %}
+                                <p class="form-text text-danger">{{ error }}</p>
+                            {% endfor %} 
+                        </div>
+                {% endfor %}
+                <button  type="submit" class="btn  btn-primary">Add to collection</button>
+                <a class="btn btn-outline-primary" href="/collections/add">New collection</a>
+                <a class="btn btn-secondary" href="/shows/{{ show_id }}">Cancel</a>
+            </form>
+        </div>
+    </div>    
+</div>
+{% endblock %}
