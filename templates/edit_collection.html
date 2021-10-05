@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block title %}Edit collection{% endblock %}
 {% block content %}
-<div class="form-css">
+<div class="basic-style">
     <h1><b>Edit Collection</b></h1>
-    <p class="lead">You can make your changes to collection name and description below.</p>
+    <p class="lead">You can make your changes to collection name and description below</p>
     <div class="row">
         <div class="col-md-6">
             <form method="POST">
@@ -17,8 +17,8 @@
                             {% endfor %}  -->
                         </div>
                 {% endfor %}
-                <button  type="submit" class="btn  btn-primary">Submit</button>
-                <a class="btn btn-secondary" href="/collections">Cancel</a>
+                <button  type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-secondary mx-2" href="/collections">Cancel</a>
             </form>
         </div>
     </div>    

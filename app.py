@@ -1,15 +1,14 @@
 import os
 
 from flask import Flask, render_template, request, flash, redirect, session, g
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from sqlalchemy.exc import IntegrityError
+from flask_bcrypt import Bcrypt
 import requests
 
-# from flask_bcrypt import Bcrypt
+from forms import RegisterForm, CollectionForm, NewShowForCollectionForm, CommentForm
+from models import db, connect_db, User, Show, Collection, CollectionShow, Comment
 
-from forms import RegisterForm, CollectionForm, NewShowForCollectionForm
-
-from models import db, connect_db, User, Show, Collection, CollectionShow
 CURR_USER_KEY = "curr_user"
 
 app = Flask(__name__)
@@ -26,7 +25,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a real secret")
 # toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
-# db.create_all()
+db.create_all()
 
 ##############################################################################
 # User signup/login/logout
@@ -57,6 +56,7 @@ def do_logout():
 
 def get_show_info(show_id):
     """ Get show info and return show-info-object or False"""
+    
     resp = requests.get(f"http://api.tvmaze.com/shows/{show_id}")
     show_data=resp.json()
     if show_data:
@@ -73,14 +73,20 @@ def get_show_info(show_id):
         return show
     return False
 
+
 @app.route('/')
 def startpage():
     """ Redirect to homepage """
-    return redirect('/tvshow-club')
+    
+    if not g.user:
+        return redirect('/tvshow-club')
+    return redirect('/user')
+
 
 @app.route('/tvshow-club')
 def landing_page():
     """ Start page of app with invitation to register/login """
+   
     return render_template('homepage_anon.html')
 
 
@@ -116,15 +122,14 @@ def login():
             do_login(user)
             flash(f"Hello, {user.username}!", "success")
             return redirect("/user")
-
         flash("Invalid credentials.", 'danger')
-
     return render_template('login.html', form=form)
 
 
 @app.route('/logout')
 def logout():
     """Handle logout of user."""
+    
     do_logout()
     flash("You logout successfully", "secondary")
     return redirect('/register')
@@ -132,17 +137,43 @@ def logout():
 
 @app.route('/user')
 def user_desktop():
-    # 
+    # to implement start page
+    
     return render_template('homepage.html')
+
+
+@app.route('/users/<int:user_id>/profile', methods=["GET", "POST"])
+def profile_edit(user_id):
+    """Update profile for a current user."""
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    user = User.query.get_or_404(user_id)
+    form = RegisterForm(obj=user)
+    if form.validate_on_submit():
+        if Bcrypt().check_password_hash(g.user.password, form.password.data):
+            user.username=form.username.data
+            try:
+                db.session.commit()
+                flash('Successfully updated your profile!', 'success')
+                return redirect('/user')
+            except IntegrityError:
+                flash("Username/email already taken. Please pick another", 'danger')
+        else:
+            flash("Invalid password!", "danger")
+    return render_template("edit_user.html", form=form)
 
 
 ######################################################################
 # user's flow handling
 ######################################################################
 
+
 @app.route('/search')
 def show_search_results():
     """ returns a list of show-instances as a result of search query """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -152,52 +183,30 @@ def show_search_results():
     return render_template("search.html", shows=shows_data)
 
 
-# @app.route('/shows/<int:show_id>')
-# def show_details(show_id):
-#     """ page with detail information about the show """
-#     if not g.user:
-#         flash("Access unauthorized. Please, log in.", "danger")
-#         return redirect("/")
-#     resp = requests.get(f"http://api.tvmaze.com/shows/{show_id}")
-#     show_data=resp.json()
-#     if show_data:
-#         show = {
-#             id: show_id,
-#             'title': show_data['name'],
-#             'language': show_data['language'],  
-#             'premiered': show_data['premiered'],
-#             'official_site': show_data['officialSite'],
-#             'average_rate': show_data['rating']['average'],
-#             'img_large_url': show_data['image']['original']
-#         }
-#     else:
-#         flash("No information about this show", "danger")
-#         return redirect('/user')
-  
-#     return render_template("show.html", show=show)
-
 @app.route('/shows/<int:show_id>')
 def show_details(show_id):
     """ page with detail information about the show """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
-   
     show = get_show_info(show_id)
     if show:
+        session["current_show_id"] = show_id
         return render_template("show.html", show=show)
     flash("No information about this show", "danger")
     return redirect('/user')
-  
     
 
 #######################################################################
 # work with collections
 #######################################################################
 
+
 @app.route('/collections')
 def all_collections():
     """ all collections list """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -208,6 +217,7 @@ def all_collections():
 @app.route('/user/collections')
 def user_collections():
     """ page with user's collection list """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -216,8 +226,9 @@ def user_collections():
 
 
 @app.route('/collections/add', methods=["POST", "GET"])
-def add_collection():
+def collection_add():
     """ Handles a new collection form, adds a personal user collection """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -232,9 +243,11 @@ def add_collection():
         return redirect("/collections")
     return render_template("new_collection.html", form=form) 
 
+
 @app.route('/collections/<int:collection_id>')
 def shows_in_collection(collection_id):
     """ List of shows in collection """
+   
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -243,8 +256,9 @@ def shows_in_collection(collection_id):
 
 
 @app.route("/user/collections/<int:collection_id>/delete", methods=["POST"]) 
-def delete_collection(collection_id):
+def collection_delete(collection_id):
     """Delete a collection""" 
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -256,8 +270,8 @@ def delete_collection(collection_id):
 
 
 @app.route('/user/collections/<int:collection_id>/edit', methods=["POST", "GET"])
-def edit_collection(collection_id):
-    """ handle a collection edit form, add a personal user collection """
+def collection_edit(collection_id):
+    """ handle a collection edit form """
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -268,21 +282,22 @@ def edit_collection(collection_id):
         collection.description = form.description.data
         try:
             db.session.commit()
-            flash('Your collection sucessfully updated!', 'success')
+            flash('Your collection was sucessfully updated!', 'success')
             return redirect("/collections")
         except IntegrityError:
             flash("Name already taken. Please pick another", 'danger')
     return render_template("/edit_collection.html", form=form) 
 
 
-
 ##########################################################################
 # shows and collections mapping
 ##########################################################################
 
+
 @app.route("/shows/<int:show_id>/add", methods=["GET", "POST"])
 def add_show_to_collection(show_id):
     """Add a show to collection."""
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -293,7 +308,6 @@ def add_show_to_collection(show_id):
         show_in_db = Show(id=show_id, title=new_show['title'], img_small_url=new_show['img_small_url'])
         db.session.add(show_in_db)
         db.session.commit()
-
     form = NewShowForCollectionForm()
     form.collection.choices = [(c.id, c.name) for c in g.user.user_collections]
     collection_id=form.collection.data
@@ -303,12 +317,13 @@ def add_show_to_collection(show_id):
         db.session.commit()
         flash('The show was sucessfully added to the collection!', 'success')
         return redirect(f"/collections/{collection_id}")
-
     return render_template("add_show_to_collection.html", form=form)
+
 
 @app.route("/collections/<int:collection_id>/<int:show_id>/delete", methods=['POST'])
 def delete_show_from_collection(collection_id,show_id):
     """ Delete the show from the collection """
+    
     if not g.user:
         flash("Access unauthorized. Please, log in.", "danger")
         return redirect("/")
@@ -317,3 +332,85 @@ def delete_show_from_collection(collection_id,show_id):
     db.session.commit()
     flash('The show was deleted from the collection','secondary')    
     return redirect(f"/collections/{collection_id}")  
+
+
+#######################################################################
+# comments
+#######################################################################
+
+
+@app.route('/comments/add', methods=["GET", "POST"])
+def comment_add():
+    """Add a comment """
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    g.show = Show.query.get_or_404(session['current_show_id'])
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(text=form.text.data, user_id=session[CURR_USER_KEY], show_id=session["current_show_id"])
+        g.user.user_comments.append(comment)
+        db.session.commit()
+        return redirect("/comments")
+    return render_template('new_comment.html', form=form)
+
+
+@app.route('/comments')
+def show_all_comments():
+    """ Show list of comments from the most recent to oldest """
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    comments = Comment.query.order_by(Comment.timestamp.desc()).all()
+    return render_template("comments.html", comments = comments)
+
+
+@app.route('/comments/show')
+def comments_for_show():
+    """ Show list of comments for the show from the most recent to oldest """
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    show_id = session['current_show_id']
+    comments = Comment.query.filter(Comment.show_id == show_id).order_by(Comment.timestamp.desc()).all()
+    return render_template("comments.html", comments = comments)
+    
+
+@app.route('/comments/<int:comment_id>/delete', methods = ['POST'])
+def comment_delete(comment_id):
+    """ Delete comment """
+    
+    if not g.user:
+        flash("Access unauthorized. Please, log in.", "danger")
+        return redirect("/")
+    comment=Comment.query.get_or_404(comment_id) 
+    if comment.user_id == g.user.id:
+        db.session.delete(comment)
+        db.session.commit()
+        flash(f'{g.user.username}, your comment was deleted','secondary') 
+    else:
+        flash("Access unauthorized", "danger")
+    return redirect("/comments") 
+
+
+@app.route('/comments/<int:comment_id>/edit', methods=["POST", "GET"])
+def comment_edit(comment_id):
+    """ handle a comment edit form """
+    
+    if not g.user:
+        flash("Access unauthorized. Please, log in.", "danger")
+        return redirect("/")
+    comment= Comment.query.get_or_404(comment_id)    
+    form = CommentForm(obj=comment)
+    if form.validate_on_submit():
+        comment.text = form.text.data
+        try:
+            db.session.commit()
+            flash('Your comment was sucessfully updated!', 'success')
+            return redirect("/comments")
+        except:
+            flash("Something went wrong, we couldn't save changes, sorry", 'danger')
+    return render_template("/edit_comment.html", form=form) 

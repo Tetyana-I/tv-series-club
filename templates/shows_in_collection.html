@@ -2,9 +2,10 @@
 {% block title %} Show list {% endblock %}
 {% block content %}
 
-<div class="lists">
+<div class="basic-style">
     <h1>{{ collection.name }} </h1>
     <p class="lead">{{ collection. description }} </p>
+    <hr>
     {% if not collection.shows %}
         <p> No shows in this collection yet </p>
     {% else %}

@@ -6,13 +6,15 @@
     <div class="col">
         <div class="card m-2 show-card">
             {% if show.show.image.medium %}
-                <img src={{show.show.image.medium}}>
+                <img src="{{ show.show.image.medium }}">
             {% else %}
                 <img src="https://tinyurl.com/tv-missing">
             {% endif %}
             <div class="card-body">
-                <h5 class="card-title text-secondary">{{show.show.name}}</h5>
-                <a href="/shows/{{show.show.id}}" class="btn btn-outline-primary opacity-75 btn-sm"><i class="fas fa-angle-double-right"></i></a>
+                <h5 class="card-title text-secondary">{{ show.show.name }}</h5>
+                <a href="/shows/{{ show.show.id }}" class="btn btn-outline-primary opacity-75 btn-sm">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
             </div>
         </div>                
     </div>

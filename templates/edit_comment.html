@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
-{% block title %}Show To Collection{% endblock %}
+{% block title %}Edit comment{% endblock %}
 {% block content %}
-<div class="form-css" >
-    <h1>Add the show to a collection </h1>
-    <p class="lead"> You could choose a collection from the list below</p>
+
+<div class="basic-style">
+    <h1><b>Edit Collection</b></h1>
+    <p class="lead">You can make your changes to your comment below</p>
     <div class="row">
         <div class="col-md-6">
             <form method="POST">
@@ -11,17 +12,17 @@
                 {% for field in form
                     if field.widget.input_type != 'hidden' %}
                         <div class="form-group mb-3">
-                            {{field(class_="form-control")}}  
+                            {{ field(placeholder=field.label.text, class="form-control my-3") }}
                             {% for error in field.errors %}
                                 <p class="form-text text-danger">{{ error }}</p>
                             {% endfor %} 
                         </div>
                 {% endfor %}
-                <button  type="submit" class="btn  btn-primary">Add to collection</button>
-                <a class="btn btn-outline-primary" href="/collections/add">New collection</a>
-                <a class="btn btn-secondary" href="/shows/{{ session['current_show_id'] }}">Cancel</a>
+                <button  type="submit" class="btn btn-primary">Submit</button>
+                <a class="btn btn-secondary mx-2" href="/comments">Cancel</a>
             </form>
         </div>
     </div>    
 </div>
+
 {% endblock %}

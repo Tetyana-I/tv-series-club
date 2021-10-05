@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %} New comment {% endblock %}
+{% block content %}
+
+<div class="row justify-content-center basic-style">
+    <div class="col mb-3">
+        <img src="{{ g.show.img_small_url }}"> 
+    </div>
+    <div class="col">
+        <h3> {{ g.show.title }}</h3>        
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div>
+                {% if form.text.errors %}
+                    {% for error in form.text.errors %}
+                        <span class="text-danger">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                {% endif %}
+                {{ form.text(placeholder="What do you think about this show?", class="form-control my-3", rows="4") }}
+            </div>
+            <button class="btn btn-primary btn-block">Add my comment</button>
+        </form>
+    </div>  
+</div>
+
+{% endblock %}

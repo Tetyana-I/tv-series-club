@@ -1,23 +1,29 @@
 {% extends 'base.html' %}
-{% block title %}Search Results{% endblock %}
+{% block title %}Show details{% endblock %}
 {% block content %}
-<div id="show">
+<div class="basic-style">
     <div class="row">
         <div class="col">
-           <img class="show-detail-img mb-3" src={{show.img_large_url}}>
+           <img class="show-detail-img mb-3" src="{{ show.img_large_url }}">
         </div>
         <div class = "col">
-            <h4 class="display-4 mb-5">{{show.title}}</h4>
-            
+            <h4 class="display-4 mb-5">{{ show.title }} 
+                <span>
+                    <a class="btn btn-secondary mx-2" href="/comments/show">
+                        <i class="fas fa-comments"></i>
+                    </a>
+                </span>
+            </h4>
             <div class="row">
-                <div class="col mb">
-                    <p>Average Rating:<span id="rate" class="h5"><b>{{show.average_rate}}</b></span></p>
-                    <p>Language:  <b>{{show.language}}</b></p>
-                    <p>Premiered:  <b>{{show.premiered}}</b></p>
-                    <a href="{{show.official_site}}"> Official website <i class="fas fa-angle-double-right"></i></a>       
+                <div class="col">
+                    <p>Average Rating:<span id="rate" class="h5"><b>{{ show.average_rate }}</b></span></p>
+                    <p>Language:  <b>{{ show.language }}</b></p>
+                    <p>Premiered:  <b>{{ show.premiered }}</b></p>
+                    <a href="{{ show.official_site }}"> Official website <i class="fas fa-angle-double-right"></i></a>       
                     <div class="mt-5">
-                        <a class="btn btn-primary" href="/shows/{{show.id}}/add">Add to collection</a>
-                        <a class="btn btn-primary mx-2">Add a review</a>
+                        <a class="btn btn-primary" href="/shows/{{ show.id }}/add">Add to a collection</a>
+                        <a class="btn btn-outline-primary mx-2" href="/comments/add">Add a comment</a>
+                        
                     </div>
                 </div>
             </div>

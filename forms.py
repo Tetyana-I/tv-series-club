@@ -1,3 +1,4 @@
+from flask.app import Flask
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, TextAreaField, SelectField
 from wtforms.validators import DataRequired, Length, InputRequired
@@ -19,3 +20,8 @@ class NewShowForCollectionForm(FlaskForm):
     """Form for adding a show to collection."""
 
     collection = SelectField('Choose a collection', coerce=int)
+
+class CommentForm(FlaskForm):
+    """Form for adding/editing comments."""
+
+    text = TextAreaField('text', validators=[DataRequired()])

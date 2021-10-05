@@ -20,9 +20,7 @@ body {
     width: 10rem;
 }
 
-#login, #register,
-#invitation, #show,
-.lists, .form-css {
+.lists, .basic-style {
     background-color: whitesmoke;
     border: solid 3px white;
     border-radius: 5px;
@@ -42,4 +40,14 @@ body {
     background-color: rgb(236, 210, 92);
     padding: 0.5em;
     margin: 0.5em;
+}
+
+.comment {
+    background-color: rgb(235, 235, 235);
+    border: solid 2px darkgrey;
+    border-radius: 5px;
+}
+
+a {
+   text-decoration: none;
 }

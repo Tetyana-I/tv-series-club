@@ -5,6 +5,7 @@
 from enum import unique
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -24,7 +25,7 @@ class User(db.Model):
     password = db.Column(db.Text, nullable=False)
     
     user_collections = db.relationship('Collection', cascade="all, delete")
-
+    user_comments = db.relationship('Comment', cascade="all, delete")
 
     def __repr__(self):
         return f"<User #{self.id}: {self.username}>"
@@ -84,6 +85,7 @@ class Collection(db.Model):
     description = db.Column(db.Text, nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
 
+    user = db.relationship('User')
     
 
 class CollectionShow(db.Model):
@@ -95,3 +97,16 @@ class CollectionShow(db.Model):
     collection_id = db.Column(db.Integer, db.ForeignKey('collections.id', ondelete='cascade'))
     show_id = db.Column(db.Integer, db.ForeignKey('shows.id',  ondelete='cascade'))
 
+
+class Comment(db.Model):
+    """Comment model. """
+    __tablename__ = 'comments' 
+      
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    text = db.Column(db.String(140), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now())
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
+    show_id = db.Column(db.Integer, db.ForeignKey('shows.id',  ondelete='cascade')) 
+    
+    user = db.relationship('User')
+    show = db.relationship('Show')
