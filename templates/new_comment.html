@@ -21,6 +21,7 @@
                 {{ form.text(placeholder="What do you think about this show?", class="form-control my-3", rows="4") }}
             </div>
             <button class="btn btn-primary btn-block">Add my comment</button>
+            <a class="btn btn-outline-secondary mx-3" href="/shows/{{ session['current_show_id'] }}">Cancel</a>
         </form>
     </div>  
 </div>

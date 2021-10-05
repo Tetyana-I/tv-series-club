@@ -3,6 +3,11 @@
 {% block content %}
 
 <div class="lists">
+    <a class="btn btn-outline-secondary mb-3" href="/">
+        <i class="fas fa-angle-double-left"></i> Home
+    </a>
+    <a class="btn btn-primary mb-3 mx-3" href="/collections/add">Add a collection</a> 
+    
     <h1>Collections</h1>
     <hr>
     <ul>
@@ -26,7 +31,6 @@
     </li>
     {% endfor %}
     </ul>
-    <a class="btn btn-primary" href="/collections/add">Add a collection</a> 
 </div>
 
 {% endblock %}

@@ -15,3 +15,5 @@
 #     img_large_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
 #     img_small_url = db.Column(db.Text, nullable=True, default="https://tinyurl.com/tv-missing")
 
+# Background image:
+# https://images.unsplash.com/photo-1586899028174-e7098604235b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1171&q=80

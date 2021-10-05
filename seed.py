@@ -1,6 +1,6 @@
 """ Seed file to make sample data to tvclub_db """
 
-from models import User, Show, Collection, CollectionShow, db 
+from models import User, Show, Collection, CollectionShow, Comment, db 
 from app import app
 
 # Create all tables
@@ -12,7 +12,7 @@ User.query.delete()
 Show.query.delete()
 Collection.query.delete()
 CollectionShow.query.delete()
-
+Comment.query.delete()
 
 # Add users
 u1 = User.register(username="testuser", password="testpassword")

@@ -3,13 +3,13 @@
 {% block content %}
 
 <div class="basic-style">
+    <a class="btn btn-outline-secondary mb-2" href="/shows/{{ session['current_show_id'] }}"> <i class="fas fa-angle-double-left"></i> Back</a>
     <h1 class="my-4">Comments</h1>
     <hr>
     {% if not comments %}
         <p> No comments for this show yet </p>
     {% else %}
         {% for comment in comments %}
-        
             <div class="row comment m-3">
                 {% if comment.user_id == g.user.id %}
                 <div class="col col-md-1 my-2">
@@ -30,6 +30,7 @@
     
         {% endfor %}
     {% endif %}
+
 </div>
   
 {% endblock %}

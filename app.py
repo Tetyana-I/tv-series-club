@@ -367,6 +367,17 @@ def show_all_comments():
     return render_template("comments.html", comments = comments)
 
 
+@app.route('/user/comments')
+def user_comments():
+    """ Show list of the current user comments """
+    
+    if not g.user:
+        flash("Access unauthorized.", "danger")
+        return redirect("/")
+    comments = Comment.query.filter(Comment.user_id == session[CURR_USER_KEY]).order_by(Comment.timestamp.desc()).all()
+    return render_template("comments.html", comments = comments)
+
+
 @app.route('/comments/show')
 def comments_for_show():
     """ Show list of comments for the show from the most recent to oldest """
