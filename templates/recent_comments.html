@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %} Recent comments{% endblock %}
+{% block content %}
+
+<div class="basic-style">
+    <h1 class="my-4">Recent comments</h1>
+    <hr>
+    {% if not comments %}
+        <p> No comments so far...</p>
+    {% else %}
+        {% for comment in comments %}
+            <div class="row comment m-3">
+                {% if comment.user_id == g.user.id %}
+                <div class="col col-md-1 my-2">
+                    <form style="display:inline;" action="/comments/{{ comment.id }}/edit" method="POST">
+                        <button type="submit" class="btn btn-sm btn-secondary text-white"><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form style="display:inline;" action="/comments/{{ comment.id }}/delete" method="POST">
+                        <button type="submit" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
+                    </form>
+                </div>
+                {% endif %}
+                <p><i>by <b>{{ comment.user.username }}</b> for </i> <b><a href="/shows/{{ comment.show.id }}">{{ comment.show.title }}</a></b> </p>
+                <div class="col col-md-11 col-sm-2 col-sm-10 my-2">
+                    <p class="lead"> {{ comment.text }} </p>
+                    <p class="text-muted"><i>{{ comment.timestamp.strftime('%d %B %Y') }}</i></p>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+  
+{% endblock %}

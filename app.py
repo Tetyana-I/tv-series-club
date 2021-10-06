@@ -132,22 +132,26 @@ def logout():
     
     do_logout()
     flash("You logout successfully", "secondary")
-    return redirect('/register')
+    return redirect('/')
     
 
 @app.route('/user')
 def user_desktop():
-    # to implement start page
+    """ Homepage for logged-in users """
     
-    return render_template('homepage.html')
-
+    if not g.user:
+        flash("Access unauthorized. Please, register or log in.", "danger")
+        return redirect("/")
+    comments = Comment.query.order_by(Comment.timestamp.desc()).limit(20).all()
+    return render_template("recent_comments.html", comments = comments)
+    
 
 @app.route('/users/<int:user_id>/profile', methods=["GET", "POST"])
 def profile_edit(user_id):
     """Update profile for a current user."""
     
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     user = User.query.get_or_404(user_id)
     form = RegisterForm(obj=user)
@@ -174,9 +178,9 @@ def profile_edit(user_id):
 def show_search_results():
     """ returns a list of show-instances as a result of search query """
     
-    if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
-        return redirect("/")
+    # if not g.user:
+    #     flash("Access unauthorized. Please, register or log in.", "danger")
+    #     return redirect("/")
     query = request.args["search-query"]
     resp = requests.get("http://api.tvmaze.com/search/shows", params={'q': query})
     shows_data=resp.json()
@@ -187,9 +191,9 @@ def show_search_results():
 def show_details(show_id):
     """ page with detail information about the show """
     
-    if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
-        return redirect("/")
+    # if not g.user:
+    #     flash("Access unauthorized. Please, log in.", "danger")
+    #     return redirect("/")
     show = get_show_info(show_id)
     if show:
         session["current_show_id"] = show_id
@@ -208,7 +212,7 @@ def all_collections():
     """ all collections list """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     collections = Collection.query.all()
     return render_template("collections.html", collections=collections)
@@ -219,7 +223,7 @@ def user_collections():
     """ page with user's collection list """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     collections = Collection.query.filter_by(user_id=g.user.id).all()
     return render_template("collections.html", collections=collections)
@@ -230,7 +234,7 @@ def collection_add():
     """ Handles a new collection form, adds a personal user collection """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     form = CollectionForm()
     name = form.name.data
@@ -249,7 +253,7 @@ def shows_in_collection(collection_id):
     """ List of shows in collection """
    
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     collection = Collection.query.get_or_404(collection_id)
     return render_template('/shows_in_collection.html', collection = collection)
@@ -260,7 +264,7 @@ def collection_delete(collection_id):
     """Delete a collection""" 
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     collection=Collection.query.get_or_404(collection_id) 
     db.session.delete(collection)
@@ -273,7 +277,7 @@ def collection_delete(collection_id):
 def collection_edit(collection_id):
     """ handle a collection edit form """
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     collection= Collection.query.get_or_404(collection_id)    
     form = CollectionForm(obj=collection)
@@ -299,7 +303,7 @@ def add_show_to_collection(show_id):
     """Add a show to collection."""
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     # check if the show is already in the database, add to the database if not
     show_in_db = Show.query.get(show_id)
@@ -325,7 +329,7 @@ def delete_show_from_collection(collection_id,show_id):
     """ Delete the show from the collection """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     row_to_delete = CollectionShow.query.filter(CollectionShow.collection_id == collection_id, CollectionShow.show_id == show_id).first()
     db.session.delete(row_to_delete)
@@ -344,7 +348,7 @@ def comment_add():
     """Add a comment """
     
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     g.show = Show.query.get_or_404(session['current_show_id'])
     form = CommentForm()
@@ -361,7 +365,7 @@ def show_all_comments():
     """ Show list of comments from the most recent to oldest """
     
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     comments = Comment.query.order_by(Comment.timestamp.desc()).all()
     return render_template("comments.html", comments = comments)
@@ -372,7 +376,7 @@ def user_comments():
     """ Show list of the current user comments """
     
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     comments = Comment.query.filter(Comment.user_id == session[CURR_USER_KEY]).order_by(Comment.timestamp.desc()).all()
     return render_template("comments.html", comments = comments)
@@ -383,7 +387,7 @@ def comments_for_show():
     """ Show list of comments for the show from the most recent to oldest """
     
     if not g.user:
-        flash("Access unauthorized.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     show_id = session['current_show_id']
     comments = Comment.query.filter(Comment.show_id == show_id).order_by(Comment.timestamp.desc()).all()
@@ -395,7 +399,7 @@ def comment_delete(comment_id):
     """ Delete comment """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     comment=Comment.query.get_or_404(comment_id) 
     if comment.user_id == g.user.id:
@@ -412,7 +416,7 @@ def comment_edit(comment_id):
     """ handle a comment edit form """
     
     if not g.user:
-        flash("Access unauthorized. Please, log in.", "danger")
+        flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     comment= Comment.query.get_or_404(comment_id)    
     form = CommentForm(obj=comment)

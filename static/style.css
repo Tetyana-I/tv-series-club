@@ -51,3 +51,13 @@ body {
 a {
    text-decoration: none;
 }
+
+.homepage-icon {
+    font-size: 3em;
+    color: white;
+    background-color: coral;
+}
+
+.homepage-label {
+    font-size: large;
+}
