@@ -178,9 +178,9 @@ def profile_edit(user_id):
 def show_search_results():
     """ returns a list of show-instances as a result of search query """
     
-    # if not g.user:
-    #     flash("Access unauthorized. Please, register or log in.", "danger")
-    #     return redirect("/")
+    if not g.user:
+        flash("Access unauthorized. Please, register or log in.", "danger")
+        return redirect("/")
     query = request.args["search-query"]
     resp = requests.get("http://api.tvmaze.com/search/shows", params={'q': query})
     shows_data=resp.json()
@@ -191,9 +191,9 @@ def show_search_results():
 def show_details(show_id):
     """ page with detail information about the show """
     
-    # if not g.user:
-    #     flash("Access unauthorized. Please, log in.", "danger")
-    #     return redirect("/")
+    if not g.user:
+        flash("Access unauthorized. Please, log in.", "danger")
+        return redirect("/")
     show = get_show_info(show_id)
     if show:
         session["current_show_id"] = show_id

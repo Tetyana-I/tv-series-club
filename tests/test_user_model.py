@@ -1,7 +1,7 @@
 """User model tests."""
 
 # run these tests like:
-# python -m unittest test_user_model.py
+# python -m unittest tests/test_user_model.py
 
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt()
