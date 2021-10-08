@@ -1,4 +1,5 @@
 import os
+import re
 
 from flask import Flask, render_template, request, flash, redirect, session, g
 # from flask_debugtoolbar import DebugToolbarExtension
@@ -14,11 +15,12 @@ CURR_USER_KEY = "curr_user"
 app = Flask(__name__)
 
 ###################################################################
+# This will allow you to connect to Heroku Postgres services using SQLAlchemy >= 1.4.x
 # source: https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres
 ###################################################################
 
 uri = os.getenv("DATABASE_URL")  # or other relevant config var
-if uri and uri.startswith("postgres://"):
+if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
 # rest of connection code using the connection string `uri`
 ###################################################################
