@@ -16,29 +16,17 @@ app = Flask(__name__)
 
 ###################################################################
 # This will allow you to connect to Heroku Postgres services using SQLAlchemy >= 1.4.x
-# source: https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres
+# adapted from: https://help.heroku.com/ZKNTJQSK/why-is-sqlalchemy-1-4-x-not-connecting-to-heroku-postgres
 ###################################################################
-
-# uri = os.getenv("DATABASE_URL")  # or other relevant config var
-# if uri.startswith("postgres://"):
-#     uri = uri.replace("postgres://", "postgresql://", 1)
-# # rest of connection code using the connection string `uri`
-# ###################################################################
 
 # # Get DB_URI from environ variable or,
 # # if not set there, use development local db.
-# app.config['SQLALCHEMY_DATABASE_URI'] = (
-#     os.environ.get('DATABASE_URL', 'postgresql:///tvclub_db'))
-
-
-uri = os.getenv("DATABASE_URL", 'postgresql:///tvclub_db')  # or other relevant config var
+uri = os.getenv("DATABASE_URL", 'postgresql:///tvclub_db') 
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://", 1)
 # rest of connection code using the connection string `uri`
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
-
-
-
+####################################################################
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = False
@@ -264,9 +252,12 @@ def collection_add():
     if form.validate_on_submit():
         collection = Collection(name=name, description=description, user_id=g.user.id)
         db.session.add(collection)
-        db.session.commit()
-        flash('Your new collection sucessfully added!', 'success')
-        return redirect("/collections")
+        try:
+            db.session.commit()
+            flash('Your collection was sucessfully added!', 'success')
+            return redirect("/collections")
+        except IntegrityError:
+            flash("Name is already taken. Please pick another", 'danger')
     return render_template("new_collection.html", form=form) 
 
 

@@ -9,23 +9,11 @@ from unittest import TestCase
 
 from models import db, User
 
-# BEFORE we import our app, we set an environmental variable
-# to use a different database for tests (we need to do this
-# before we import our app, since that will have already
-# connected to the database
-
 os.environ['DATABASE_URL'] = "postgresql:///tvclub-test"
 
-
-# import app
-
-from app import app, CURR_USER_KEY, do_logout
-
-# Create tables 
+from app import app
 
 db.create_all()
-
-# Don't have WTForms use CSRF
 
 app.config['WTF_CSRF_ENABLED'] = False
 
@@ -39,7 +27,6 @@ class UserViewTestCase(TestCase):
         User.query.delete()
         self.client = app.test_client()
         self.testuser = User.register(username="testuser", password="testpassword")
-        # self.user2 = User.register(username="user2",  password="seconduser")
         db.session.commit()
 
 
