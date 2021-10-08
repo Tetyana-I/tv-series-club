@@ -52,24 +52,11 @@ https://tv-series-club.herokuapp.com
 
 The TV-series club application allows logged-in users:
 
-    - search TV-shows by name;
-        
-        ![search](/images/search.png)
-
-    - open pages with detailed information about the show that contains links to the official websites of tv-shows;
-
-    - create and manage own comments to shows
-
-        ![show_details](/images/show.png)
-
-    - create and manage personal collections  (for example, "best mini tv-shows", “want to watch”, “favorites”); they will be shared with other users, but only the author of a comment could be able to delete or edit this comment);
-
-        ![collection](/images/collection.png) 
-
- 
-    - have access to all tv-club collections and comments.
-
-        ![comments](/images/comments.png) 
+- search TV-shows by name;
+- open pages with detailed information about the shows that contains links to the official websites of tv-shows;
+- create and manage own comments to shows
+- create and manage personal collections  (for example, "best mini tv-shows", “want to watch”, “favorites”); they will be shared with other users, but only the author of a comment could be able to delete or edit this comment);
+- have access to all tv-club collections and comments.
 
 ## Tests
 Tests were implemented with Unittest Framework.
