@@ -90,17 +90,3 @@ class ModelTestCase(TestCase):
         self.assertEqual(c.show_id, c.id)
         self.assertEqual(c.user.username, 'user3')
         self.assertEqual(c.show.title, 'Seinfield')
-
-
-# class Comment(db.Model):
-#     """Comment model. """
-#     __tablename__ = 'comments' 
-      
-#     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-#     text = db.Column(db.String(140), nullable=False)
-#     timestamp = db.Column(db.DateTime, nullable=False, default=datetime.now())
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='cascade'))
-#     show_id = db.Column(db.Integer, db.ForeignKey('shows.id',  ondelete='cascade')) 
-    
-#     user = db.relationship('User')
-#     show = db.relationship('Show')
