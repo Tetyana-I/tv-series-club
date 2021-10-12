@@ -68,6 +68,6 @@ The TV-series club application allows logged-in users:
 
 Tests were implemented with Unittest Framework. 
 
-    `python -m unittest tests/<name_of_testfile>`
+    python -m unittest tests/<name_of_testfile>
 
 
