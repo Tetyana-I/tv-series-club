@@ -2,8 +2,10 @@
 {% block title %}Show To Collection{% endblock %}
 {% block content %}
 <div class="basic-style" >
+    <a class="btn btn-outline-secondary my-3" href="/shows/{{ session['current_show_id'] }}"><i class="fas fa-angle-double-left"></i> Back</a> 
+    <hr>  
     <h1>Add the show to a collection </h1>
-    <p class="lead"> You could choose a collection from the list below</p>
+    <p class="lead"> You could choose a collection from the list below</p> 
     <div class="row">
         <div class="col-md-6">
             <form method="POST">
@@ -17,9 +19,14 @@
                             {% endfor %} 
                         </div>
                 {% endfor %}
-                <button  type="submit" class="btn  btn-primary">Add to collection</button>
-                <a class="btn btn-outline-primary mx-2" href="/collections/add">New collection</a>
-                <a class="btn btn-secondary " href="/shows/{{ session['current_show_id'] }}">Cancel</a>
+                <div class="row">
+                    <div class="col">
+                        <button  type="submit" class="btn  btn-primary">Add to collection</button>   
+                    </div>
+                    <div class="col">
+                        <a class="btn btn-outline-primary mx-2" href="/collections/add">New collection</a> 
+                    </div>
+                </div>
             </form>
         </div>
     </div>    

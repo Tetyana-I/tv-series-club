@@ -6,9 +6,9 @@
     <div class="col">
         <div class="card m-2 show-card">
             {% if show.show.image.medium %}
-                <img src="{{ show.show.image.medium }}">
+                <img src="{{ show.show.image.medium }}" class="img-fluid">
             {% else %}
-                <img src="https://tinyurl.com/tv-missing">
+                <img src="https://tinyurl.com/tv-missing" class="img-fluid">
             {% endif %}
             <div class="card-body">
                 <h5 class="card-title text-secondary">{{ show.show.name }}</h5>

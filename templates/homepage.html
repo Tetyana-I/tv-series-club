@@ -3,8 +3,8 @@
 {% block content %}
 
 <div class="basic-style">
-    <h3 id="top"> The most popular shows </h3>
-    <a href="#recent-comments">Read recent comments >></a>
+    <h3> The most popular shows </h3>
+    <a href="#recent-comments">Read recent comments <i class="fas fa-angle-double-right"></i></a>
     <hr>
     {% if not comments %}
         <p> No shows were commented </p>
@@ -51,7 +51,7 @@
             </div>
         {% endfor %}
     {% endif %}
-    <a href="#top"> To the top >> </a>
+    <a href="#top"> <i class="fas fa-angle-double-left"></i> To the top </a>
 </div>
   
 {% endblock %}
