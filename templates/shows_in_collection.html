@@ -15,18 +15,20 @@
     <div class="row">
         {% for show in collection.shows %}
         <div class="col">
-            <div class="card m-2 shows-list text-center">
+            <div class="card m-2 popular-show text-center">
                 <div>
                     <p class="card-title">{{show.title}}</p>
-                </div>                
-                <a href="/shows/{{ show.id }}"><img class="min-img" src="{{ show.img_small_url }}"></a> 
-                {% if collection.user_id == g.user.id %}
-                <p>
-                    <form action="/collections/{{ collection.id }}/{{ show.id }}/delete" method="POST">
-                        <button type="submit" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
-                    </form>
-                </p>
-                {% endif %}
+                </div>   
+                <div class="card-body">
+                    <a href="/shows/{{ show.id }}"><img class="min-img img-fluid" src="{{ show.img_small_url }}"></a> 
+                    {% if collection.user_id == g.user.id %}
+                    <p>
+                        <form action="/collections/{{ collection.id }}/{{ show.id }}/delete" method="POST">
+                            <button type="submit" class="btn btn-sm btn-danger text-white"><i class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </p>
+                    {% endif %}                    
+                </div>             
             </div>                
         </div>
         {% endfor %}

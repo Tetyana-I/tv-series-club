@@ -8,12 +8,11 @@ body {
     border: solid 2px whitesmoke;
 }
 
-.shows-list {
-    width: 10rem;
-    border-radius: 3px;
-    border: solid, 2px, white;
+.popular-show {
+    width: 12rem;
+    color:white;
+    text-shadow: 1px 1px black;
     background-color: darkgrey;
-    color: white;
 }
 
 .min-img {

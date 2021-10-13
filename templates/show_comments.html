@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
-{% block title %} Recent comments{% endblock %}
+{% block title %} Show comments {% endblock %}
 {% block content %}
 
 <div class="basic-style">
-    <h1 class="my-4">Recent comments</h1>
+    <a class="btn btn-outline-secondary mb-2" href="/shows/{{ session['current_show_id'] }}"> <i class="fas fa-angle-double-left"></i> Back</a>
+    <h1 class="my-4">Comments</h1>
     <hr>
     {% if not comments %}
-        <p> No comments so far...</p>
+        <p> No comments for this show yet </p>
     {% else %}
         {% for comment in comments %}
             <div class="row comment m-3">
@@ -26,8 +27,10 @@
                     <p class="text-muted"><i>{{ comment.timestamp.strftime('%d %B %Y') }}</i></p>
                 </div>
             </div>
+    
         {% endfor %}
     {% endif %}
+
 </div>
   
 {% endblock %}

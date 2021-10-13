@@ -34,7 +34,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                 <li><a class="dropdown-item" href="/user/collections">My Collections</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="/comments">My Comments</a></li> 
+                                <li><a class="dropdown-item" href="/user/comments">My Comments</a></li> 
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="/users/{{ g.user.id }}/profile">Edit My Profile</a></li>
                             </ul>
@@ -42,7 +42,8 @@
                     {% endif %}
                 </ul>
                 <form class="d-flex" action="/search">
-                    <input class="form-control me-2" type="search" placeholder="Search show ..." aria-label="Search" name="search-query">
+                    <input id="top" class="form-control me-2" type="search" placeholder="Search show ..."
+                     aria-label="Search" name="search-query" autofocus>
                     <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">

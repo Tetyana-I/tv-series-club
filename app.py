@@ -153,7 +153,7 @@ def user_desktop():
         flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
     comments = Comment.query.order_by(Comment.timestamp.desc()).limit(20).all()
-    return render_template("recent_comments.html", comments = comments)
+    return render_template("homepage.html", comments = comments)
     
 
 @app.route('/users/<int:user_id>/profile', methods=["GET", "POST"])
@@ -404,7 +404,7 @@ def comments_for_show():
         return redirect("/")
     show_id = session['current_show_id']
     comments = Comment.query.filter(Comment.show_id == show_id).order_by(Comment.timestamp.desc()).all()
-    return render_template("comments.html", comments = comments)
+    return render_template("show_comments.html", comments = comments)
     
 
 @app.route('/comments/<int:comment_id>/delete', methods = ['POST'])

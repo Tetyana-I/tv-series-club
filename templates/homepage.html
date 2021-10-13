@@ -1,13 +1,35 @@
 {% extends 'base.html' %}
-{% block title %} Comments {% endblock %}
+{% block title %} Homepage {% endblock %}
 {% block content %}
 
 <div class="basic-style">
-    <a class="btn btn-outline-secondary mb-2" href="/user"> <i class="fas fa-angle-double-left"></i> Home </a>
-    <h1 class="my-4">Comments</h1>
+    <h3 id="top"> The most popular shows </h3>
+    <a href="#recent-comments">Read recent comments >></a>
     <hr>
     {% if not comments %}
-        <p> No comments so far ... </p>
+        <p> No shows were commented </p>
+    {% else %}
+    <div class="row">
+        {% for comment in comments %}
+        <div class="col">
+            <div class="card m-2 popular-show text-center">
+                <div>
+                    <h6 class="card-title mt-3">{{comment.show.title}}</h6>
+                </div>    
+                <div class="card-body">
+                    <a href="/shows/{{ comment.show.id }}"><img class="min-img img-fluid" src="{{ comment.show.img_small_url }}"></a>          
+                </div>            
+            </div>                
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+<div class="basic-style my-5">
+    <h3 id="recent-comments"> Recent comments </h3>
+    {% if not comments %}
+        <p> No comments so far...</p>
     {% else %}
         {% for comment in comments %}
             <div class="row comment m-3">
@@ -29,6 +51,7 @@
             </div>
         {% endfor %}
     {% endif %}
+    <a href="#top"> To the top >> </a>
 </div>
   
 {% endblock %}
