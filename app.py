@@ -356,14 +356,21 @@ def delete_show_from_collection(collection_id,show_id):
 #######################################################################
 
 
-@app.route('/comments/add', methods=["GET", "POST"])
-def comment_add():
+@app.route('/comments/<int:show_id>/add', methods=["GET", "POST"])
+def comment_add(show_id):
     """Add a comment """
     
     if not g.user:
         flash("Access unauthorized. Please, register or log in.", "danger")
         return redirect("/")
-    g.show = Show.query.get_or_404(session['current_show_id'])
+    # check if the show is already in the database, add to the database if not
+    show_in_db = Show.query.get(show_id)
+    if show_in_db == None:
+        new_show = get_show_info(show_id)
+        show_in_db = Show(id=show_id, title=new_show['title'], img_small_url=new_show['img_small_url'])
+        db.session.add(show_in_db)
+        db.session.commit()
+    g.show=show_in_db
     form = CommentForm()
     if form.validate_on_submit():
         comment = Comment(text=form.text.data, user_id=session[CURR_USER_KEY], show_id=session["current_show_id"])
