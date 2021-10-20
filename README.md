@@ -56,13 +56,21 @@ https://tv-series-club.herokuapp.com
 The TV-series club application allows logged-in users:
 
 - search TV-shows by name;
+
+    ![show details](https://raw.githubusercontent.com/Tetyana-I/tv-series-club/main/static/images/search.PNG)
+
 - open pages with detailed information about the shows that contains links to the official websites of tv-shows;
 
-    ![show details](/static/images/show.png)
+    ![show details](https://raw.githubusercontent.com/Tetyana-I/tv-series-club/main/static/images/show.PNG)
 
 - create and manage own comments to shows; they will be shared with other users, but only the author of a comment could be able to delete or edit this comment);
+
+    ![show details](https://raw.githubusercontent.com/Tetyana-I/tv-series-club/main/static/images/comments.PNG)
+
 - create and manage personal collections  (for example, "best mini tv-shows", “want to watch”, “favorites”); they will be shared with other users, but only the author of a collection could be able to delete or edit this collection);
 - have access to all tv-club collections and comments.
+
+    ![show details](https://raw.githubusercontent.com/Tetyana-I/tv-series-club/main/static/images/collection.PNG)    
 
 ## Tests
 
