@@ -5,7 +5,7 @@ This small application could be used by TV-Series fans as a place to keep track 
 
 ## Technologies Used
 
-**Front End:** Bootstrap
+**Front End:** Bootstrap, HTML, CSS
 
 **Back End:** Python, Flask, SQLAlchemy, WTForms
 
